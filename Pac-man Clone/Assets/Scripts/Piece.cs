@@ -25,8 +25,6 @@ public class Piece : MonoBehaviour
     void Update()
     {
       getInput();
-
-
     }
 
     void getInput() {
@@ -112,6 +110,10 @@ public class Piece : MonoBehaviour
           } else {
             yPos += 1.0f;
             gameObject.transform.position = new Vector3(xPos, yPos, 0.0f);
+            foreach (Transform square in transform) {
+              Vector2 pos = gameScript.Round(square.position);
+              gameScript.setPlacedSquares(pos);
+            }
             enabled = false;
             gameScript.instantiateNextPiece();
           }
@@ -125,7 +127,7 @@ public class Piece : MonoBehaviour
       foreach (Transform square in transform) {
         Vector2 pos = gameScript.Round(square.position);
 
-        if (gameScript.checkIsInsideGrid (pos) == false) {
+        if (gameScript.checkIsInsideGrid (pos) == false || gameScript.checkSquareCollision(pos)) {
           return false;
         }
       }
