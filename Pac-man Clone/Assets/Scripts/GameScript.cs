@@ -8,7 +8,7 @@ public class GameScript : MonoBehaviour
     public static int gridWidth = 10;
     public static int gridHieght = 20;
     private int nextPieceNum = 0;
-    private List<Vector2> placedSquares = new List<Vector2>();
+    private bool[,] placedSquares = new bool[10,20];
     // Start is called before the first frame update
     void Start()
     {
@@ -26,11 +26,32 @@ public class GameScript : MonoBehaviour
     }
 
     public bool checkSquareCollision (Vector2 pos) {
-      return placedSquares.Contains(pos);
+      return placedSquares[(int)pos.x, (int)pos.y];
     }
 
     public void setPlacedSquares (Vector2 pos) {
-        placedSquares.Add(pos);
+        placedSquares[(int)pos.x, (int)pos.y] = true;
+    }
+
+    public void checkClearLine ()  {
+      int placedSquareCount = 0;
+      for (int i=0; i<10; i++) {
+        for (int j=0; j<10; j++) {
+          if (placedSquares[i, j]) {
+            placedSquareCount++;
+          } else {
+            placedSquareCount = 0;
+            break;
+          }
+        }
+        if (placedSquareCount == 10) {
+          clearLine(i);
+        }
+      }
+    }
+
+    private void clearLine (int line) {
+
     }
 
     public Vector2 Round (Vector2 pos) {
@@ -66,7 +87,7 @@ public class GameScript : MonoBehaviour
           nextPieceName = "Tetromino_Z";
           break;
       }
-      GameObject nextPiece = (GameObject)Instantiate(Resources.Load(nextPieceName, typeof(GameObject)), new Vector2(5.0f, 20.0f), Quaternion.identity);
+      GameObject nextPiece = (GameObject)Instantiate(Resources.Load(nextPieceName, typeof(GameObject)), new Vector2(5.0f, 18.0f), Quaternion.identity);
       Piece script = nextPiece.AddComponent(typeof(Piece)) as Piece;
     }
 }

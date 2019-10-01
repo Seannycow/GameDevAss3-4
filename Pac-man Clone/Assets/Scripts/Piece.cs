@@ -11,7 +11,7 @@ public class Piece : MonoBehaviour
   private float waitTime = 1.0f;
   private float timer = 0.0f;
   private float xPos = 5.0f;
-  private float yPos = 20.0f;
+  private float yPos = 18.0f;
   private int rotNum = 1;
   private float rotAmount = 0.0f;
 
@@ -114,6 +114,7 @@ public class Piece : MonoBehaviour
               Vector2 pos = gameScript.Round(square.position);
               gameScript.setPlacedSquares(pos);
             }
+            gameScript.checkClearLine();
             enabled = false;
             gameScript.instantiateNextPiece();
           }
