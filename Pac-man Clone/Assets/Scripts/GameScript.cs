@@ -8,6 +8,7 @@ public class GameScript : MonoBehaviour
     public static int gridWidth = 10;
     public static int gridHieght = 20;
     private int nextPieceNum = 0;
+    private List<Vector2> placedSquares = new List<Vector2>();
     // Start is called before the first frame update
     void Start()
     {
@@ -22,6 +23,14 @@ public class GameScript : MonoBehaviour
 
     public bool checkIsInsideGrid (Vector2 pos) {
       return ((int)pos.x >= 0 && (int)pos.x < gridWidth && (int)pos.y >= 0);
+    }
+
+    public bool checkSquareCollision (Vector2 pos) {
+      return placedSquares.Contains(pos);
+    }
+
+    public void setPlacedSquares (Vector2 pos) {
+        placedSquares.Add(pos);
     }
 
     public Vector2 Round (Vector2 pos) {
