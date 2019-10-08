@@ -6,6 +6,7 @@ using System;
 public class GameScript : MonoBehaviour
 {
   private AnimationManager animationManager;
+  public Scoreboard scoreboard;
   public static int gridWidth = 10;
   public static int gridHieght = 20;
   private int nextPieceNum = 0;
@@ -144,6 +145,7 @@ public class GameScript : MonoBehaviour
 
   private void clearLine (int startLine, int numOfLines) {
     StartCoroutine(WaitForAnim(startLine, numOfLines));
+    scoreboard.incrementScore(0, numOfLines);
   }
 
   IEnumerator WaitForAnim(int startLine, int numOfLines)
