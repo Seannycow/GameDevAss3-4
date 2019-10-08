@@ -16,6 +16,7 @@ TagManager:
   - Left Frame
   - Right Frame
   - Planted
+  - Managers
   layers:
   - Default
   - TransparentFX
