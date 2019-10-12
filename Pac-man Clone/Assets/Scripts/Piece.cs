@@ -6,7 +6,7 @@ public class Piece : MonoBehaviour
 {
   private GameScript gameScript;
 
-  private float waitTime = 1.0f;
+
   private float timer = 0.0f;
   private float xPos = 5.0f;
   private float yPos = 18.0f;
@@ -47,7 +47,7 @@ public class Piece : MonoBehaviour
       }
     }
     if (Input.GetKey("s") || Input.GetKey(KeyCode.DownArrow)) {
-      waitTime = 0.2f;
+      gameScript.waitTime = 0.2f;
     }
     if (Input.GetKeyDown(KeyCode.Space)) {
       timer = -10000.0f;
@@ -64,11 +64,17 @@ public class Piece : MonoBehaviour
           case 1:
           rotAmount = 90.0f;
           gameObject.transform.Rotate(0.0f, 0.0f, rotAmount);
+          foreach (Transform square in transform) {
+            square.Rotate(0.0f, 0.0f, -rotAmount);
+          }
           rotNum = 2;
           break;
           case 2:
           rotAmount = 270.0f;
           gameObject.transform.Rotate(0.0f, 0.0f, rotAmount);
+          foreach (Transform square in transform) {
+            square.Rotate(0.0f, 0.0f, -rotAmount);
+          }
           rotNum = 1;
           break;
         }
@@ -78,6 +84,9 @@ public class Piece : MonoBehaviour
         case "T":
         rotAmount = 90.0f;
         gameObject.transform.Rotate(0.0f, 0.0f, rotAmount);
+        foreach (Transform square in transform) {
+          square.Rotate(0.0f, 0.0f, -rotAmount);
+        }
         break;
         case "O":
         //Play sound
@@ -88,15 +97,18 @@ public class Piece : MonoBehaviour
 
       } else {
         gameObject.transform.Rotate(0,0,-rotAmount);
+        foreach (Transform square in transform) {
+          square.Rotate(0.0f, 0.0f, rotAmount);
+        }
       }
     }
 
 
     timer += Time.deltaTime;
 
-    // Check if we have reached beyond 2 seconds.
+    // Check if we have reached beyond 1 seconds.
     // Subtracting two is more accurate over time than resetting to zero.
-    if (timer > waitTime)
+    if (timer > gameScript.waitTime)
     {
 
       yPos -= 1.0f;
@@ -118,8 +130,8 @@ public class Piece : MonoBehaviour
         gameScript.instantiateNextPiece();
       }
 
-      // Remove the recorded 2 seconds.
-      timer = timer - waitTime;
+      // Remove the recorded time.
+      timer = timer - gameScript.waitTime;
     }
   }
 

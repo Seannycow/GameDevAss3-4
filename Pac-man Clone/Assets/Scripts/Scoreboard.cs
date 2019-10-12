@@ -6,12 +6,16 @@ using UnityEngine.UI;
 public class Scoreboard : MonoBehaviour
 {
   private Text scoreText;
+  private Text levelText;
   private int score = 0;
+  public int level = 0;
     // Start is called before the first frame update
     void Start()
     {
       scoreText = this.gameObject.transform.GetChild(1).gameObject.GetComponent<Text>();
       scoreText.text = score.ToString();
+      levelText = this.gameObject.transform.GetChild(2).gameObject.GetComponent<Text>();
+      levelText.text = level.ToString();
     }
 
     // Update is called once per frame
@@ -20,7 +24,7 @@ public class Scoreboard : MonoBehaviour
 
     }
 
-    public void incrementScore (int level, int lines) {
+    public void incrementScore (int lines) {
       int linesScore = 0;
       switch(lines) {
         case 1:
@@ -38,5 +42,10 @@ public class Scoreboard : MonoBehaviour
       }
       score += linesScore * (level+1);
       scoreText.text = score.ToString();
+    }
+
+    public void levelUp (){
+      level++;
+      levelText.text = level.ToString();
     }
 }

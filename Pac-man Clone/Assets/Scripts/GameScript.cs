@@ -12,10 +12,17 @@ public class GameScript : MonoBehaviour
   private int nextPieceNum = 0;
   private GameObject[,] placedSquares = new GameObject[10,20];
   private int[,] placedSquaresTest = new int[10,20];
+  private int linesCleared = 0;
+  private float baseWaitTime = 1.0f;
+  private float levelWaitTime = 1.0f;
+  public float waitTime = 1.0f;
+  //private Text nextLevelText;
+
   // Start is called before the first frame update
   void Start()
   {
     animationManager = gameObject.GetComponent<AnimationManager>();
+    //nextLevelText = GameObject.Find("Next Level Text");
     instantiateNextPiece();
   }
 
@@ -72,55 +79,6 @@ public class GameScript : MonoBehaviour
     }
   }
 
-  // public void debugPlacedSquaresTest() {
-  //
-  //   for (int i = 0; i < 10; i++)
-  //   {
-  //
-  //     for (int j = 0; j < 20; j++)
-  //     {
-  //       placedSquaresTest[i,j] = 1;
-  //     }
-  //   }
-  //
-  //   string s = "Test: ";
-  //   for (int j = 19; j > -1; j--)
-  //   {
-  //
-  //     for (int i = 0; i < 10; i++)
-  //     {
-  //       if (placedSquaresTest[i,j] == 1) {
-  //         s += "1";
-  //       } else {
-  //         s+= "0";
-  //       }
-  //     }
-  //     s += "\n";
-  //   }
-  //     Debug.Log(s);
-  //
-  //     for (int j = 0; j < 3; j++){
-  //       int i =1;
-  //       Array.Clear(placedSquaresTest, (j*20)+i, 1);
-  //       Debug.Log((j*20)+i);
-  //     }
-  //     s = "Test 2: ";
-  //     for (int j = 19; j > -1; j--)
-  //     {
-  //
-  //       for (int i = 0; i < 10; i++)
-  //       {
-  //         if (placedSquaresTest[i,j] == 1) {
-  //           s += "1";
-  //         } else {
-  //           s+= "0";
-  //         }
-  //       }
-  //       s += "\n";
-  //     }
-  //     Debug.Log(s);
-  // }
-
   public void debugPlacedSquares() {
     string s = "";
     for (int j = 19; j > -1; j--)
@@ -145,7 +103,13 @@ public class GameScript : MonoBehaviour
 
   private void clearLine (int startLine, int numOfLines) {
     StartCoroutine(WaitForAnim(startLine, numOfLines));
-    scoreboard.incrementScore(0, numOfLines);
+    scoreboard.incrementScore(numOfLines);
+    linesCleared += numOfLines;
+
+    if (linesCleared >= scoreboard.level*10+10) {
+      linesCleared -= scoreboard.level*10+10;
+      levelUp();
+    }
   }
 
   IEnumerator WaitForAnim(int startLine, int numOfLines)
@@ -173,12 +137,31 @@ public class GameScript : MonoBehaviour
     }
   }
 
+  private void levelUp() {
+    scoreboard.levelUp();
+    levelWaitTime = baseWaitTime * 1/(scoreboard.level+1);
+    placedSquares = new GameObject[10,20];
+    string[] tagsToDestroy = {"J", "I", "L", "O", "S", "T", "Z"};
+    foreach (string tag in tagsToDestroy) {
+      GameObject[] gameObjects = GameObject.FindGameObjectsWithTag (tag);
+      foreach (GameObject gameObj in gameObjects)
+      {
+        Destroy(gameObj);
+      }
+    }
+  }
+
   public Vector2 Round (Vector2 pos) {
     return new Vector2 (Mathf.Round(pos.x), Mathf.Round(pos.y));
   }
 
   public void instantiateNextPiece () {
+    StartCoroutine(coroutineInstantiateNextPiece());
+  }
 
+  IEnumerator coroutineInstantiateNextPiece()
+  {
+    yield return new WaitForSeconds(1);
     nextPieceNum = UnityEngine.Random.Range(1, 8);
     string nextPieceName = "";
     switch (nextPieceNum)
@@ -207,5 +190,6 @@ public class GameScript : MonoBehaviour
     }
     GameObject nextPiece = (GameObject)Instantiate(Resources.Load(nextPieceName, typeof(GameObject)), new Vector2(5.0f, 18.0f), Quaternion.identity);
     Piece script = nextPiece.AddComponent(typeof(Piece)) as Piece;
+    waitTime = levelWaitTime;
   }
 }

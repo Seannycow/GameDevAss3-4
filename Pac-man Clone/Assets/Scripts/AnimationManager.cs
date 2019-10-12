@@ -23,4 +23,9 @@ public class AnimationManager : MonoBehaviour
       currClearLineBlock = (GameObject)Instantiate(Resources.Load(
       "Clear_Anim_Example", typeof(GameObject)), new Vector3(0.0f, (float)line, -1.0f), Quaternion.identity);
     }
+
+    public void levelUp()
+    {
+
+    }
 }

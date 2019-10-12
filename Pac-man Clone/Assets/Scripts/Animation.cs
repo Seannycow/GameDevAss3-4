@@ -5,6 +5,7 @@ using UnityEngine;
 public class Animation : MonoBehaviour
 {
   private Animator clearLineAnimator;
+  private Animator levelUpAnimator;
     // Start is called before the first frame update
     void Start()
     {
