@@ -19,6 +19,7 @@ public class GameScript : MonoBehaviour
   public float waitTime = 1.0f;
   private float newPieceWaitTime = 0.0f;
   private Vector2 nextPieceWindowPos = new Vector2(-4.0f, 11.5f);
+  private GameObject currentPiece;
   //private Text nextLevelText;
 
   // Start is called before the first frame update
@@ -72,6 +73,9 @@ public class GameScript : MonoBehaviour
         numOfLines++;
         startLine = j;
         startLineIsSet = true;
+        if (j == 19) {
+          GameOver();
+        }
       }
       placedSquareCount = 0;
     }
@@ -79,6 +83,11 @@ public class GameScript : MonoBehaviour
     if (startLineIsSet){
       clearLine(startLine, numOfLines);
     }
+  }
+
+  private void GameOver() {
+    Destroy(currentPiece.GetComponent<Piece>());
+
   }
 
   public void debugPlacedSquares() {
@@ -207,11 +216,24 @@ public class GameScript : MonoBehaviour
     }
   }
 
+  private Vector2 findStartPos(String tag) {
+    Vector2 startPos = new Vector2(4.0f, 18.0f);
+    switch (tag)
+    {
+      case "I":
+      case "S":
+      case "Z":
+        startPos = new Vector2(4.0f, 19.0f);
+        break;
+    }
+    return startPos;
+  }
+
   IEnumerator coroutineInstantiateNextPiece()
   {
     yield return new WaitForSeconds(newPieceWaitTime);
-    nextPieceWindowPiece.transform.position = new Vector2(5.0f, 18.0f);
-    GameObject currentPiece = nextPieceWindowPiece;
+    nextPieceWindowPiece.transform.position = findStartPos(nextPieceWindowPiece.tag);
+    currentPiece = nextPieceWindowPiece;
     windowPieceBringToFront(currentPiece, "Default");
     Piece script = currentPiece.AddComponent(typeof(Piece)) as Piece;
     nextPieceWindowPiece = (GameObject)Instantiate(Resources.Load(assignPiece(), typeof(GameObject)), nextPieceWindowPos, Quaternion.identity);

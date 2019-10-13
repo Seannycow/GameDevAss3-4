@@ -6,8 +6,8 @@ public class Piece : MonoBehaviour
 {
   private GameScript gameScript;
   private float timer = 0.0f;
-  private float xPos = 5.0f;
-  private float yPos = 18.0f;
+  private float xPos = 0.0f;
+  private float yPos = 0.0f;
   private int rotNum = 1;
   private float rotAmount = 0.0f;
 
@@ -15,6 +15,8 @@ public class Piece : MonoBehaviour
   void Start()
   {
     gameScript = GameObject.FindWithTag("Managers").GetComponent<GameScript>();
+    xPos = transform.position.x;
+    yPos = transform.position.y;
   }
 
   // Update is called once per frame
