@@ -22,6 +22,15 @@ TagManager:
   - Play Game Button
   - Level Select Button
   - Canvas
+  - Exit Button
+  - Try Again Button
+  - Ghost J
+  - Ghost I
+  - Ghost L
+  - Ghost O
+  - Ghost S
+  - Ghost T
+  - Ghost Z
   layers:
   - Default
   - TransparentFX

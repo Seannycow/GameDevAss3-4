@@ -19,7 +19,7 @@ public class AnimationScript : MonoBehaviour
       }
       else if (gameObject.tag == "New Level Text")
       {
-        animator.Play("New Level Text");
+
         newLevelText = gameObject.GetComponent<Image>();
         newLevelText.sprite = Resources.Load<Sprite>("Sprites/Text/Level Text "+ scoreboard.level);
         StartCoroutine(EndLevelUpAnim());
@@ -45,6 +45,7 @@ public class AnimationScript : MonoBehaviour
 
     IEnumerator EndLevelUpAnim()
     {
+      animator.Play("New Level Text", -1, 0f);
       Debug.Log("Destroy Game Object 2");
       yield return new WaitForSeconds(1.5f);
       Debug.Log("Destroy Game Object 3");

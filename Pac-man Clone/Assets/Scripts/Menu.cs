@@ -18,9 +18,6 @@ public class Menu : MonoBehaviour
     lvlSelectBtn = GameObject.FindGameObjectWithTag("Level Select Button").GetComponent<Button>();
     lvlSelectBtn.onClick.AddListener(LevelIncrease);
     lvlSelectImage = GameObject.FindGameObjectWithTag("Level Select Button").GetComponent<Image>();
-    Debug.Log(playGameBtn);
-    Debug.Log(lvlSelectBtn);
-    Debug.Log(lvlSelectImage);
 	}
 
 	void PlayGame(){

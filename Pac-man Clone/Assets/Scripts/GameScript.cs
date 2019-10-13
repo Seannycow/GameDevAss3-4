@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.SceneManagement;
 
 public class GameScript : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class GameScript : MonoBehaviour
   public Scoreboard scoreboard;
   private GameObject nextPieceWindowPiece;
   private GameObject currentPiece;
+  private GameObject currentPieceGhost;
   public static int gridWidth = 10;
   public static int gridHieght = 20;
   private int nextPieceNum = 0;
@@ -55,7 +57,17 @@ public class GameScript : MonoBehaviour
     placedSquares[Convert.ToInt32(obj.transform.position.x), Convert.ToInt32(obj.transform.position.y)] = obj;
   }
 
+  private void checkGameOver() {
+      for (int i=0; i<10; i++) {
+        if (placedSquares[i, 19]) {
+          gameOver();
+        }
+      }
+  }
+
   public void checkClearLine ()  {
+    checkGameOver();
+
     int numOfLines = 0;
     int startLine = 0;
     int placedSquareCount = 0;
@@ -74,10 +86,8 @@ public class GameScript : MonoBehaviour
         numOfLines++;
         startLine = j;
         startLineIsSet = true;
-        if (j == 19) {
-          GameOver();
-        }
       }
+
       placedSquareCount = 0;
     }
     startLine = startLine - (numOfLines-1);
@@ -86,8 +96,9 @@ public class GameScript : MonoBehaviour
     }
   }
 
-  private void GameOver() {
-    currentPiece.GetComponent<Piece>();
+  private void gameOver() {
+    PlayerPrefs.SetInt("Level", scoreboard.level);
+    SceneManager.LoadScene("Game Over State", LoadSceneMode.Single);
   }
 
   public void debugPlacedSquares() {
@@ -223,8 +234,8 @@ public class GameScript : MonoBehaviour
       case "I":
       case "S":
       case "Z":
-        startPos = new Vector2(4.0f, 19.0f);
-        break;
+      startPos = new Vector2(4.0f, 19.0f);
+      break;
     }
     return startPos;
   }
@@ -232,15 +243,20 @@ public class GameScript : MonoBehaviour
   IEnumerator coroutineInstantiateNextPiece()
   {
     yield return new WaitForSeconds(newPieceWaitTime);
+
     if(!firstGameObjectFlag && newPieceWaitTime == 1.5f)
     {
       nextPieceWindowPiece = (GameObject)Instantiate(Resources.Load(assignPiece(), typeof(GameObject)), nextPieceWindowPos, Quaternion.identity);
       windowPieceBringToFront(nextPieceWindowPiece, "UI");
     }
     firstGameObjectFlag = false;
+
     nextPieceWindowPiece.transform.position = findStartPos(nextPieceWindowPiece.tag);
     currentPiece = nextPieceWindowPiece;
     windowPieceBringToFront(currentPiece, "Default");
+    currentPieceGhost = (GameObject)Instantiate(Resources.Load("Ghost_Tetromino_" + currentPiece.tag, typeof(GameObject)), currentPiece.transform.position, Quaternion.identity);
+
+
     Piece script = currentPiece.AddComponent(typeof(Piece)) as Piece;
     nextPieceWindowPiece = (GameObject)Instantiate(Resources.Load(assignPiece(), typeof(GameObject)), nextPieceWindowPos, Quaternion.identity);
     windowPieceBringToFront(nextPieceWindowPiece, "UI");
