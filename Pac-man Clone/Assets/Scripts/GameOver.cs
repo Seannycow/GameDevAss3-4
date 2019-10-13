@@ -9,7 +9,7 @@ public class GameOver : MonoBehaviour
   private Button againBtn;
   private Button exitBtn;
 
-    // Start is called before the first frame update
+    // Setting listeners on buttons
     void Start () {
     againBtn = GameObject.FindGameObjectWithTag("Try Again Button").GetComponent<Button>();
     againBtn.onClick.AddListener(PlayGame);
@@ -17,17 +17,13 @@ public class GameOver : MonoBehaviour
     exitBtn.onClick.AddListener(Exit);
   }
 
+  // Returns player to game at the level they failed on if try again is clickd
   void PlayGame(){
     SceneManager.LoadScene("Game", LoadSceneMode.Single);
   }
 
+  // Returns to main menu if exit is clicked
   void Exit() {
     SceneManager.LoadScene("Main Menu", LoadSceneMode.Single);
   }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
 }

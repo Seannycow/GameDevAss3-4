@@ -18,19 +18,13 @@ public class Scoreboard : MonoBehaviour
 
   void Start()
   {
-
     scoreText = this.gameObject.transform.GetChild(1).gameObject.GetComponent<Text>();
     scoreText.text = score.ToString();
     levelText = this.gameObject.transform.GetChild(2).gameObject.GetComponent<Text>();
     levelText.text = level.ToString();
   }
 
-  // Update is called once per frame
-  void Update()
-  {
-
-  }
-
+  // Increments score on a line clear based on the level and number of lines cleared
   public void incrementScore (int lines) {
     int linesScore = 0;
     switch(lines) {
@@ -48,9 +42,11 @@ public class Scoreboard : MonoBehaviour
       break;
     }
     score += linesScore * (level+1);
+    // Display new score on scoreboard
     scoreText.text = score.ToString();
   }
 
+  // Increments level on scoreboard
   public void levelUp() {
     level++;
     levelText.text = level.ToString();

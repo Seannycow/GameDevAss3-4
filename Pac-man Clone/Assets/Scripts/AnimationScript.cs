@@ -46,9 +46,7 @@ public class AnimationScript : MonoBehaviour
     IEnumerator EndLevelUpAnim()
     {
       animator.Play("New Level Text", -1, 0f);
-      Debug.Log("Destroy Game Object 2");
       yield return new WaitForSeconds(1.5f);
-      Debug.Log("Destroy Game Object 3");
       animator.speed = 0;
     }
 
