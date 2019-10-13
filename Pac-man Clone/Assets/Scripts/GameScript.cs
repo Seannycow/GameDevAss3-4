@@ -8,6 +8,7 @@ public class GameScript : MonoBehaviour
   private AnimationManager animationManager;
   public Scoreboard scoreboard;
   private GameObject nextPieceWindowPiece;
+  private GameObject currentPiece;
   public static int gridWidth = 10;
   public static int gridHieght = 20;
   private int nextPieceNum = 0;
@@ -19,7 +20,7 @@ public class GameScript : MonoBehaviour
   public float waitTime = 1.0f;
   private float newPieceWaitTime = 0.0f;
   private Vector2 nextPieceWindowPos = new Vector2(-4.0f, 11.5f);
-  //private Text nextLevelText;
+  private bool firstGameObjectFlag = true;
 
   // Start is called before the first frame update
   void Start()
@@ -28,6 +29,7 @@ public class GameScript : MonoBehaviour
     newPieceWaitTime = animationManager.levelUpAnimator.GetCurrentAnimatorStateInfo(0).length;
     nextPieceWindowPiece = (GameObject)Instantiate(Resources.Load(assignPiece(), typeof(GameObject)), nextPieceWindowPos, Quaternion.identity);
     windowPieceBringToFront(nextPieceWindowPiece, "UI");
+    levelWaitTime = baseWaitTime * 1/(scoreboard.level+1);
     instantiateNextPiece();
   }
 
@@ -72,6 +74,9 @@ public class GameScript : MonoBehaviour
         numOfLines++;
         startLine = j;
         startLineIsSet = true;
+        if (j == 19) {
+          GameOver();
+        }
       }
       placedSquareCount = 0;
     }
@@ -79,6 +84,10 @@ public class GameScript : MonoBehaviour
     if (startLineIsSet){
       clearLine(startLine, numOfLines);
     }
+  }
+
+  private void GameOver() {
+    currentPiece.GetComponent<Piece>();
   }
 
   public void debugPlacedSquares() {
@@ -108,8 +117,8 @@ public class GameScript : MonoBehaviour
     scoreboard.incrementScore(numOfLines);
     linesCleared += numOfLines;
 
-    if (linesCleared >= scoreboard.level*10+10) {
-      linesCleared -= scoreboard.level*10+10;
+    if (linesCleared >= scoreboard.level*1+1) {
+      //linesCleared -= scoreboard.level*10+10;
       levelUp();
     }
   }
@@ -207,11 +216,30 @@ public class GameScript : MonoBehaviour
     }
   }
 
+  private Vector2 findStartPos(String tag) {
+    Vector2 startPos = new Vector2(4.0f, 18.0f);
+    switch (tag)
+    {
+      case "I":
+      case "S":
+      case "Z":
+        startPos = new Vector2(4.0f, 19.0f);
+        break;
+    }
+    return startPos;
+  }
+
   IEnumerator coroutineInstantiateNextPiece()
   {
     yield return new WaitForSeconds(newPieceWaitTime);
-    nextPieceWindowPiece.transform.position = new Vector2(5.0f, 18.0f);
-    GameObject currentPiece = nextPieceWindowPiece;
+    if(!firstGameObjectFlag && newPieceWaitTime == 1.5f)
+    {
+      nextPieceWindowPiece = (GameObject)Instantiate(Resources.Load(assignPiece(), typeof(GameObject)), nextPieceWindowPos, Quaternion.identity);
+      windowPieceBringToFront(nextPieceWindowPiece, "UI");
+    }
+    firstGameObjectFlag = false;
+    nextPieceWindowPiece.transform.position = findStartPos(nextPieceWindowPiece.tag);
+    currentPiece = nextPieceWindowPiece;
     windowPieceBringToFront(currentPiece, "Default");
     Piece script = currentPiece.AddComponent(typeof(Piece)) as Piece;
     nextPieceWindowPiece = (GameObject)Instantiate(Resources.Load(assignPiece(), typeof(GameObject)), nextPieceWindowPos, Quaternion.identity);

@@ -19,6 +19,9 @@ TagManager:
   - Managers
   - Clear Line Anim
   - New Level Text
+  - Play Game Button
+  - Level Select Button
+  - Canvas
   layers:
   - Default
   - TransparentFX

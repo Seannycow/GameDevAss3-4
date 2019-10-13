@@ -45,10 +45,7 @@ public class Piece : MonoBehaviour
       }
     }
     if (Input.GetKey("s") || Input.GetKey(KeyCode.DownArrow)) {
-      gameScript.waitTime = 0.2f;
-    }
-    if (Input.GetKeyDown(KeyCode.Space)) {
-      timer = -10000.0f;
+      gameScript.waitTime = 0.02f;
     }
     if ((Input.GetKeyDown("r"))) {
       rotAmount = 0.0f;

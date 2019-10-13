@@ -6,7 +6,8 @@ using UnityEngine.UI;
 public class AnimationScript : MonoBehaviour
 {
   private Animator animator;
-  private Text newLevelText;
+  private Image newLevelText;
+  public Scoreboard scoreboard;
     // Start is called before the first frame update
     void Start()
     {
@@ -18,10 +19,9 @@ public class AnimationScript : MonoBehaviour
       }
       else if (gameObject.tag == "New Level Text")
       {
-        animator.Play("Level_Up");
-        newLevelText = gameObject.GetComponent<Text>();
-        newLevelText.text = "Level 0";
-        Debug.Log("Destroy Game Object 1");
+        animator.Play("New Level Text");
+        newLevelText = gameObject.GetComponent<Image>();
+        newLevelText.sprite = Resources.Load<Sprite>("Sprites/Text/Level Text "+ scoreboard.level);
         StartCoroutine(EndLevelUpAnim());
       }
     }
@@ -32,7 +32,7 @@ public class AnimationScript : MonoBehaviour
     }
 
     public void LevelUp(int level) {
-      newLevelText.text = "Level " + level;
+      newLevelText.sprite = Resources.Load<Sprite>("Sprites/Text/Level Text "+level);
       animator.speed = 1;
       StartCoroutine(EndLevelUpAnim());
     }
