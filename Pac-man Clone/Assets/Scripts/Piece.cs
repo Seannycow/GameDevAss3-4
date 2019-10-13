@@ -34,9 +34,11 @@ public class Piece : MonoBehaviour
       gameObject.transform.position = new Vector3(xPos, yPos, 0.0f);
       if (checkPosition(transform)) {
           configureGhost();
+          gameScript.playSoundFromPiece("move");
       } else {
         xPos += 1.0f;
         gameObject.transform.position = new Vector3(xPos, yPos, 0.0f);
+        gameScript.playSoundFromPiece("actionFailure");
 
       }
     }
@@ -45,9 +47,11 @@ public class Piece : MonoBehaviour
       gameObject.transform.position = new Vector3(xPos, yPos, 0.0f);
       if (checkPosition(transform)) {
         configureGhost();
+        gameScript.playSoundFromPiece("move");
       } else {
         xPos -= 1.0f;
         gameObject.transform.position = new Vector3(xPos, yPos, 0.0f);
+        gameScript.playSoundFromPiece("actionFailure");
 
       }
     }
@@ -109,6 +113,7 @@ public class Piece : MonoBehaviour
 
       if (checkPosition(transform)) {
         configureGhost();
+        gameScript.playSoundFromPiece("pieceRotation");
       } else {
         gameObject.transform.Rotate(0,0,-rotAmount);
         ghost.transform.Rotate(0.0f, 0.0f, rotAmount);
@@ -118,6 +123,7 @@ public class Piece : MonoBehaviour
         foreach (Transform square in ghost.transform) {
           square.Rotate(0.0f, 0.0f, rotAmount);
         }
+        gameScript.playSoundFromPiece("actionFailure");
       }
     }
 
@@ -142,6 +148,7 @@ public class Piece : MonoBehaviour
           //square.gameObject.transform.position = gameScript.Round(square.position);
           gameScript.setPlacedSquares(square.gameObject);
         }
+        gameScript.playSoundFromPiece("piecePlacement");
         gameScript.checkClearLine();
         enabled = false;
         Destroy(ghost);

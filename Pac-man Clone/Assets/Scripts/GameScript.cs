@@ -8,6 +8,7 @@ public class GameScript : MonoBehaviour
 {
   private AnimationManager animationManager;
   public Scoreboard scoreboard;
+  private SoundManager soundManager;
   private GameObject nextPieceWindowPiece;
   private GameObject currentPiece;
   private GameObject currentPieceGhost;
@@ -27,6 +28,7 @@ public class GameScript : MonoBehaviour
   // Start is called before the first frame update
   void Start()
   {
+    soundManager = gameObject.GetComponent<SoundManager>();
     animationManager = gameObject.GetComponent<AnimationManager>();
     newPieceWaitTime = animationManager.levelUpAnimator.GetCurrentAnimatorStateInfo(0).length;
     nextPieceWindowPiece = (GameObject)Instantiate(Resources.Load(assignPiece(), typeof(GameObject)), nextPieceWindowPos, Quaternion.identity);
@@ -42,7 +44,7 @@ public class GameScript : MonoBehaviour
   }
 
   public bool checkIsInsideGrid (GameObject obj) {
-    return (Convert.ToInt32(obj.transform.position.x) >= 0 && Convert.ToInt32(obj.transform.position.x) < gridWidth && Convert.ToInt32(obj.transform.position.y) >= 0);
+    return (Convert.ToInt32(obj.transform.position.x) >= 0 && Convert.ToInt32(obj.transform.position.x) < gridWidth && Convert.ToInt32(obj.transform.position.y) >= 0 && Convert.ToInt32(obj.transform.position.y) <= 19);
 
   }
 
@@ -98,6 +100,7 @@ public class GameScript : MonoBehaviour
 
   private void gameOver() {
     PlayerPrefs.SetInt("Level", scoreboard.level);
+    soundManager.playGameOver();
     SceneManager.LoadScene("Game Over State", LoadSceneMode.Single);
   }
 
@@ -125,6 +128,7 @@ public class GameScript : MonoBehaviour
 
   private void clearLine (int startLine, int numOfLines) {
     StartCoroutine(WaitForAnim(startLine, numOfLines));
+    soundManager.playLineClear();
     scoreboard.incrementScore(numOfLines);
     linesCleared += numOfLines;
 
@@ -162,6 +166,7 @@ public class GameScript : MonoBehaviour
   private void levelUp() {
     scoreboard.levelUp();
     animationManager.nextLevelTextScript.LevelUp(scoreboard.level);
+    soundManager.playGameStart();
     newPieceWaitTime = 1.5f;
     levelWaitTime = baseWaitTime * 1/(scoreboard.level+1);
     placedSquares = new GameObject[10,20];
@@ -262,5 +267,22 @@ public class GameScript : MonoBehaviour
     windowPieceBringToFront(nextPieceWindowPiece, "UI");
     waitTime = levelWaitTime;
     newPieceWaitTime = 0.0f;
+  }
+
+  public void playSoundFromPiece (string sound) {
+    switch(sound) {
+      case "pieceRotation":
+        soundManager.playPieceRotation();
+        break;
+      case "move":
+        soundManager.playMove();
+        break;
+      case "actionFailure":
+        soundManager.playActionFailure();
+        break;
+      case "piecePlacement":
+        soundManager.playPiecePlacement();
+        break;
+    }
   }
 }
