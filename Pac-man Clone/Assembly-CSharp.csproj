@@ -62,9 +62,7 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\AnimationManager.cs" />
     <Compile Include="Assets\Scripts\AnimationScript.cs" />
-    <Compile Include="Assets\Scripts\Dropdown.cs" />
     <Compile Include="Assets\Scripts\GameScript.cs" />
-    <Compile Include="Assets\Scripts\Initialise.cs" />
     <Compile Include="Assets\Scripts\Piece.cs" />
     <Compile Include="Assets\Scripts\Scoreboard.cs" />
     <Reference Include="Unity.TextMeshPro.Editor">

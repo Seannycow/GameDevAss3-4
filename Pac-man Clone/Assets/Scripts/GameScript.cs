@@ -7,6 +7,7 @@ public class GameScript : MonoBehaviour
 {
   private AnimationManager animationManager;
   public Scoreboard scoreboard;
+  private GameObject nextPieceWindowPiece;
   public static int gridWidth = 10;
   public static int gridHieght = 20;
   private int nextPieceNum = 0;
@@ -17,6 +18,7 @@ public class GameScript : MonoBehaviour
   private float levelWaitTime = 1.0f;
   public float waitTime = 1.0f;
   private float newPieceWaitTime = 0.0f;
+  private Vector2 nextPieceWindowPos = new Vector2(-4.0f, 11.5f);
   //private Text nextLevelText;
 
   // Start is called before the first frame update
@@ -24,7 +26,8 @@ public class GameScript : MonoBehaviour
   {
     animationManager = gameObject.GetComponent<AnimationManager>();
     newPieceWaitTime = animationManager.levelUpAnimator.GetCurrentAnimatorStateInfo(0).length;
-    //nextLevelText = GameObject.Find("Next Level Text");
+    nextPieceWindowPiece = (GameObject)Instantiate(Resources.Load(assignPiece(), typeof(GameObject)), nextPieceWindowPos, Quaternion.identity);
+    windowPieceBringToFront(nextPieceWindowPiece, "UI");
     instantiateNextPiece();
   }
 
@@ -160,37 +163,59 @@ public class GameScript : MonoBehaviour
     StartCoroutine(coroutineInstantiateNextPiece());
   }
 
-  IEnumerator coroutineInstantiateNextPiece()
-  {
-    yield return new WaitForSeconds(newPieceWaitTime);
+  private string assignPiece() {
     nextPieceNum = UnityEngine.Random.Range(1, 8);
     string nextPieceName = "";
     switch (nextPieceNum)
     {
       case 1:
       nextPieceName = "Tetromino_I";
+      nextPieceWindowPos = new Vector2(-4.0f, 11.5f);
       break;
       case 2:
       nextPieceName = "Tetromino_J";
+      nextPieceWindowPos = new Vector2(-3.5f, 11.0f);
       break;
       case 3:
       nextPieceName = "Tetromino_L";
+      nextPieceWindowPos = new Vector2(-3.5f, 11.0f);
       break;
       case 4:
       nextPieceName = "Tetromino_O";
+      nextPieceWindowPos = new Vector2(-4.0f, 11.0f);
       break;
       case 5:
       nextPieceName = "Tetromino_S";
+      nextPieceWindowPos = new Vector2(-3.5f, 12.0f);
       break;
       case 6:
       nextPieceName = "Tetromino_T";
+      nextPieceWindowPos = new Vector2(-3.5f, 11.0f);
       break;
       case 7:
       nextPieceName = "Tetromino_Z";
+      nextPieceWindowPos = new Vector2(-3.5f, 12.0f);
       break;
     }
-    GameObject nextPiece = (GameObject)Instantiate(Resources.Load(nextPieceName, typeof(GameObject)), new Vector2(5.0f, 18.0f), Quaternion.identity);
-    Piece script = nextPiece.AddComponent(typeof(Piece)) as Piece;
+    return nextPieceName;
+  }
+
+  private void windowPieceBringToFront(GameObject piece, String layerName) {
+    foreach (Transform square in piece.transform) {
+      SpriteRenderer sprite = square.gameObject.GetComponent<SpriteRenderer>();
+      sprite.sortingLayerName = layerName;
+    }
+  }
+
+  IEnumerator coroutineInstantiateNextPiece()
+  {
+    yield return new WaitForSeconds(newPieceWaitTime);
+    nextPieceWindowPiece.transform.position = new Vector2(5.0f, 18.0f);
+    GameObject currentPiece = nextPieceWindowPiece;
+    windowPieceBringToFront(currentPiece, "Default");
+    Piece script = currentPiece.AddComponent(typeof(Piece)) as Piece;
+    nextPieceWindowPiece = (GameObject)Instantiate(Resources.Load(assignPiece(), typeof(GameObject)), nextPieceWindowPos, Quaternion.identity);
+    windowPieceBringToFront(nextPieceWindowPiece, "UI");
     waitTime = levelWaitTime;
     newPieceWaitTime = 0.0f;
   }
