@@ -16,12 +16,14 @@ public class GameScript : MonoBehaviour
   private float baseWaitTime = 1.0f;
   private float levelWaitTime = 1.0f;
   public float waitTime = 1.0f;
+  private float newPieceWaitTime = 0.0f;
   //private Text nextLevelText;
 
   // Start is called before the first frame update
   void Start()
   {
     animationManager = gameObject.GetComponent<AnimationManager>();
+    newPieceWaitTime = animationManager.levelUpAnimator.GetCurrentAnimatorStateInfo(0).length;
     //nextLevelText = GameObject.Find("Next Level Text");
     instantiateNextPiece();
   }
@@ -67,13 +69,10 @@ public class GameScript : MonoBehaviour
         numOfLines++;
         startLine = j;
         startLineIsSet = true;
-        Debug.Log("+numLines");
       }
       placedSquareCount = 0;
     }
-    Debug.Log("Before " + startLine);
     startLine = startLine - (numOfLines-1);
-    Debug.Log("Line " + startLine + "\n" + "numOfLines " + numOfLines);
     if (startLineIsSet){
       clearLine(startLine, numOfLines);
     }
@@ -139,6 +138,8 @@ public class GameScript : MonoBehaviour
 
   private void levelUp() {
     scoreboard.levelUp();
+    animationManager.nextLevelTextScript.LevelUp(scoreboard.level);
+    newPieceWaitTime = 1.5f;
     levelWaitTime = baseWaitTime * 1/(scoreboard.level+1);
     placedSquares = new GameObject[10,20];
     string[] tagsToDestroy = {"J", "I", "L", "O", "S", "T", "Z"};
@@ -161,7 +162,7 @@ public class GameScript : MonoBehaviour
 
   IEnumerator coroutineInstantiateNextPiece()
   {
-    yield return new WaitForSeconds(1);
+    yield return new WaitForSeconds(newPieceWaitTime);
     nextPieceNum = UnityEngine.Random.Range(1, 8);
     string nextPieceName = "";
     switch (nextPieceNum)
@@ -191,5 +192,6 @@ public class GameScript : MonoBehaviour
     GameObject nextPiece = (GameObject)Instantiate(Resources.Load(nextPieceName, typeof(GameObject)), new Vector2(5.0f, 18.0f), Quaternion.identity);
     Piece script = nextPiece.AddComponent(typeof(Piece)) as Piece;
     waitTime = levelWaitTime;
+    newPieceWaitTime = 0.0f;
   }
 }

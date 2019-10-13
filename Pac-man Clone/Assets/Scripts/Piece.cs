@@ -5,8 +5,6 @@ using UnityEngine;
 public class Piece : MonoBehaviour
 {
   private GameScript gameScript;
-
-
   private float timer = 0.0f;
   private float xPos = 5.0f;
   private float yPos = 18.0f;

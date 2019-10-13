@@ -17,6 +17,8 @@ TagManager:
   - Right Frame
   - Planted
   - Managers
+  - Clear Line Anim
+  - New Level Text
   layers:
   - Default
   - TransparentFX
